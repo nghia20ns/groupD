@@ -52,7 +52,7 @@ class Logger:
         
     def add_log(self, message):
         """Ghi log vào tệp với mã hóa utf-8, mỗi lần chạy sẽ xóa nội dung tệp cũ"""
-        with open(self.log_file, "w", encoding="utf-8") as file:  # Mở tệp với chế độ 'w' để ghi lại từ đầu
+        with open(self.log_file, "a", encoding="utf-8") as file:  # Mở tệp với chế độ 'w' để ghi lại từ đầu
             file.write(message)
 
 # Khởi tạo Logger và LogDisplay

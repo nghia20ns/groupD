@@ -54,7 +54,7 @@ class TextInterface(tk.Frame):
     def switch_to_encode(self):
         if self.current_state != "Encrypt":
             self.current_state = "Encrypt"
-            self.encode_btn.config(state=tk.DISABLED, bg="#cceeff", fg="white")
+            self.encode_btn.config(state=tk.DISABLED, bg="#cceeff", fg="black")
             self.decode_btn.config(state=tk.NORMAL, bg="#e6f7ff", fg="black")
             self.decode_component.grid_forget()
             self.encode_component.grid(row=1, column=0, pady=20, sticky="nsew")
@@ -63,20 +63,21 @@ class TextInterface(tk.Frame):
         if self.current_state != "Decrypt":
             self.current_state = "Decrypt"
             self.encode_btn.config(state=tk.NORMAL, bg="#e6f7ff", fg="black")
-            self.decode_btn.config(state=tk.DISABLED, bg="#cceeff", fg="white")
+            self.decode_btn.config(state=tk.DISABLED, bg="#cceeff", fg="black")
             self.encode_component.grid_forget()
             self.decode_component.grid(row=1, column=0, pady=20, sticky="nsew")
 
-    def add_hover_effect(self, button):
-        """Thêm hiệu ứng hover cho nút."""
+    # hiệu ứng di chuột
+    def add_hover_effect(self, widget):
         def on_enter(event):
-            if button['state'] != tk.DISABLED:
-                button.config(bg="#cceeff", fg="white")  # Màu khi hover
+            if widget['bg'] not in ("#66b3ff", "#cceeff"):
+                widget['bg'] = "#99ddff"
         def on_leave(event):
-            if button['state'] != tk.DISABLED:
-                button.config(bg="#e6f7ff", fg="black")  # Màu mặc định
-        button.bind("<Enter>", on_enter)
-        button.bind("<Leave>", on_leave)
+            if widget['bg'] not in ("#66b3ff", "#cceeff"):
+                widget['bg'] = "#e6f7ff"
+        widget.bind("<Enter>", on_enter)
+        widget.bind("<Leave>", on_leave)
+
 
 
 # Code chạy ứng dụng

@@ -102,7 +102,6 @@ class ImageInterface(tk.Frame):
         self.file_path_entry.insert(0, filename)
 
     def submit(self):
-        self.log_display.add_log("")
         image = cv2.imread(self.file_path_entry.get())
         self.decode_img_data(image)
 

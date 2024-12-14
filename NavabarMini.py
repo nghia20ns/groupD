@@ -46,7 +46,7 @@ class NavbarMini(tk.Frame):
         for name, path in icons_data.items():
             try:
                 img = Image.open(path)
-                img = img.resize((40, 40), Image.ANTIALIAS)
+                img = img.resize((25, 25), Image.ANTIALIAS)
                 self.icons[name] = ImageTk.PhotoImage(img)
             except Exception as e:
                 print(f"Could not load icon {name}: {e}")
@@ -55,27 +55,56 @@ class NavbarMini(tk.Frame):
         if icon_name not in self.icons:
             print(f"Icon {icon_name} not found")
             return
-        canvas = tk.Canvas(self, width=50, height=50, bg="#f0f8ff", bd=0, highlightthickness=0, relief="flat")
+        
+        canvas = tk.Canvas(self, width=50, height=50, bd=0,
+                            bg="#f0f8ff", highlightthickness=0, relief="flat")
         canvas.grid(row=row_idx, column=0, padx=10, pady=10, sticky="ew")
 
-        canvas.create_oval(5, 5, 45, 45, fill="#cceeff", outline="#f0f8ff", width=0)
+        # Tạo một hình oval và lưu ID của nó để sau này thay đổi
+        oval_id = canvas.create_oval(5, 5, 45, 45, outline="#f0f8ff", fill="#f0f8ff", width=0)
         canvas.create_image(25, 25, image=self.icons[icon_name])
 
-        canvas.bind("<Button-1>", lambda event: self.on_click(event, canvas, interface))
-        self.buttons.append((canvas, interface))
+        # Thêm sự kiện khi click vào nút
+        canvas.bind("<Button-1>", lambda event: self.on_click(event, canvas, interface, oval_id))
+        self.buttons.append((canvas, interface, oval_id))
+        self.add_hover_effect(canvas, oval_id)
 
-    def on_click(self, event, canvas, interface):
-        # Đổi màu nút khi click để nhận diện trang hiện tại
+    def on_click(self, event, canvas, interface, oval_id):
+        # Thay đổi màu nút khi click
         def apply_click_color():
-            canvas.config(bg="#cceeff")  # Màu khi click (màu đậm)
             self.update_state(interface)  # Cập nhật trạng thái sau khi thay đổi màu
 
-        # Áp dụng màu click sau một khoảng thời gian ngắn
         canvas.after(50, apply_click_color)
 
+    def add_hover_effect(self, canvas, oval_id):
+        # Tạo một hình lớn hơn bao quanh hình oval hiện tại để mở rộng phạm vi di chuột vào
+        bounding_oval_id = canvas.create_oval(
+            canvas.bbox(oval_id)[0] - 10,  # Dịch sang trái
+            canvas.bbox(oval_id)[1] - 10,  # Dịch lên trên
+            canvas.bbox(oval_id)[2] + 10,  # Dịch sang phải
+            canvas.bbox(oval_id)[3] + 10,  # Dịch xuống dưới
+            outline='', fill='', tags='hover_area'  # Không có viền, không màu sắc
+        )
+        def on_enter(event):
+            # Lấy màu hiện tại của hình oval
+            current_fill = canvas.itemcget(oval_id, 'fill')
+            if current_fill not in ("#66b3ff", "#cceeff"):
+                canvas.itemconfig(oval_id, fill="#99ddff")  # Thay đổi màu của hình oval khi di chuột vào
+        def on_leave(event):
+            # Lấy màu hiện tại của hình oval
+            current_fill = canvas.itemcget(oval_id, 'fill')
+            if current_fill not in ("#66b3ff", "#cceeff"):
+                canvas.itemconfig(oval_id, fill="#e6f7ff")  # Đặt lại màu của hình oval khi di chuột rời khỏi
+
+        # Ràng buộc sự kiện di chuột vào và rời khỏi cho vùng bao quanh lớn hơn
+        canvas.tag_bind(bounding_oval_id, "<Enter>", on_enter)
+        canvas.tag_bind(bounding_oval_id, "<Leave>", on_leave)
+        # Xóa vùng bao quanh lớn hơn sau khi hoàn thành
+        canvas.tag_bind(oval_id, "<Leave>", lambda event: canvas.delete(bounding_oval_id))
+
     def highlight_selected_button(self, selected_interface):
-        for canvas, iface in self.buttons:
+        for canvas, iface, oval_id in self.buttons:
             if iface == selected_interface:
-                canvas.config(bg="#cceeff")  # Nút được chọn với màu xanh nổi bật (màu đậm)
+                canvas.itemconfig(oval_id, fill="#cceeff",state=tk.DISABLED)  # Thay đổi màu của hình oval khi chọn
             else:
-                canvas.config(bg="#f0f8ff")  # Màu nền ban đầu của nút
+                canvas.itemconfig(oval_id, fill="#f0f8ff",state=tk.NORMAL)  # Đặt lại màu ban đầu của hình oval

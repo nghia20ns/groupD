@@ -4,9 +4,10 @@ from Interface.ImageInterface.ImageInterface import ImageInterface
 from Interface.AudioInterface.AudioInterface import AudioInterface
 from Interface.VideoInterface.VideoInterface import VideoInterface
 from Interface.DecryptionInterface.DecryptionInterface import DecryptionInterface
+
 class Navbar(tk.Frame):
     def __init__(self, master, state, update_state_func):
-        super().__init__(master, bg="#f0f8ff", bd=2, relief="groove")
+        super().__init__(master, bg="#f0f0f5", bd=2, relief="groove")  # Lighter background color
         self.master = master
         self.state = state
         self.update_state = update_state_func
@@ -25,7 +26,7 @@ class Navbar(tk.Frame):
     def add_logo(self):
         try:
             logo = tk.PhotoImage(file="Images/logo.png")
-            logo_label = tk.Label(self, image=logo, bg="#cceeff")
+            logo_label = tk.Label(self, image=logo, bg="#f0f0f5")  # Matching background color
             logo_label.image = logo
             logo_label.grid(row=0, column=0, pady=10, padx=10, sticky="n")
         except Exception as e:
@@ -33,18 +34,18 @@ class Navbar(tk.Frame):
 
     def create_button(self, text, interface, row_idx):
         button = tk.Button(self, text=text, command=lambda: self.switch_interface(interface),
-                           bg="#e6f7ff", font=("Helvetica", 11), relief="flat", cursor="hand2")
+                           bg="#d9e6f2", font=("Helvetica", 10), relief="flat", cursor="hand2", state=tk.NORMAL, height=2, width=20)
         button.grid(row=row_idx, column=0, sticky="ew", padx=10, pady=5)
         self.add_hover_effect(button)
         self.buttons.append((button, interface))
 
     def add_hover_effect(self, widget):
         def on_enter(event):
-            if widget['bg'] not in ("#66ccff", "#66b3ff"):
-                widget['bg'] = "#99ddff"
+            if widget['bg'] not in ("#66b3ff", "#f0f0f5"):  # Avoid hover effect on selected button
+                widget['bg'] = "#a9c9f5"  # Subtle light blue hover effect
         def on_leave(event):
-            if widget['bg'] not in ("#66ccff", "#66b3ff"):
-                widget['bg'] = "#e6f7ff"
+            if widget['bg'] not in ("#66b3ff", "#f0f0f5"):
+                widget['bg'] = "#d9e6f2"  # Restore button color
         widget.bind("<Enter>", on_enter)
         widget.bind("<Leave>", on_leave)
 
@@ -57,8 +58,6 @@ class Navbar(tk.Frame):
     def highlight_selected_button(self, selected_interface):
         for button, iface in self.buttons:
             if iface == selected_interface:
-                button['bg'] = "#66ccff"
-                button['relief'] = "sunken"
+                button.config(bg="#66b3ff", state=tk.DISABLED, font=("Helvetica", 10))  # Active button with accent color
             else:
-                button['bg'] = "#e6f7ff"
-                button['relief'] = "flat"
+                button.config(bg="#d9e6f2", state=tk.NORMAL, font=("Helvetica", 10))  # Reset other buttons

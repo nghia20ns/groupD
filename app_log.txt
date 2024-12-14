@@ -1,1 +1,8 @@
-[2024-12-02 20:54:56] File created successfully.
+[2024-12-14 13:50:23] File created successfully.
+[2024-12-14 13:54:10] Encoded the data successfully in the Image and the image is successfully saved at:D:/Learn/DoAnTotNghiep/Sample_cover_files/Encode/rc4.png
+[2024-12-14 13:54:27] File created successfully.
+[2024-12-14 13:54:54] 
+[2024-12-14 13:54:54] File created successfully.
+[2024-12-14 13:55:01] 
+[2024-12-14 13:55:01] File name already exists. Please choose another name.
+[2024-12-14 13:56:02] File created successfully.
