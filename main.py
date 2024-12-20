@@ -32,12 +32,34 @@ class MainApplication(tk.Tk):
         self.current_interface = None
         
         # Nút floating button
-        self.floating_button = tk.Button(self, image=self.resized_image, command=self.floating_button_action, bg="#99c2ff", borderwidth=0, relief="raised")
-        self.floating_button.place(x=180, y=60)  # Vị trí của floating button
+        self.floating_button = tk.Button(
+            self, 
+            image=self.resized_image, 
+            command=self.floating_button_action, 
+            bg="#cceeff", 
+            borderwidth=0, 
+            relief="raised"
+        )
+
+        # Vị trí của floating button
+        self.floating_button.place(x=180, y=60)
+
+        # Thêm hiệu ứng hover
+        self.add_hover_effect(self.floating_button)
+        
         self.show_interface(IndexApp)
         # Khởi tạo trạng thái mặc định là Navbar
         self.current_state = "Navbar"  
         self.navbarMini.pack_forget()  # Ẩn navbarMini ban đầu
+
+    def add_hover_effect(self, widget):
+        """Thêm hiệu ứng hover cho widget."""
+        def on_enter(event):
+            widget['bg'] = "#66b3ff"  # Màu khi chuột vào
+        def on_leave(event):
+            widget['bg'] = "#cceeff"  # Màu khi chuột rời khỏi
+        widget.bind("<Enter>", on_enter)
+        widget.bind("<Leave>", on_leave)
 
     def floating_button_action(self):
         """Đổi trạng thái hiển thị của navbar và thay đổi vị trí nút floating."""

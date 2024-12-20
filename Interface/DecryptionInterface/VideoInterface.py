@@ -37,33 +37,33 @@ class VideoInterface(tk.Frame):
         label.grid(row=0, column=0, columnspan=3, padx=20, pady=20)
         
         # Button "Browse video File" và Entry "File Path"
-        lbl_browser_video = tk.Label(self, text="File Decrypt:", bg="white", font=("Arial", 12))
+        lbl_browser_video = tk.Label(self, text="File Decrypt:", bg="white", font=("Arial", 10))
         lbl_browser_video.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-        self.file_path_video = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.file_path_video = ttk.Entry(self, width=50, font=("Arial", 10))
         self.file_path_video.grid(row=1, column=1, pady=10, sticky="we")
         browse_button_video = ttk.Button(self, text="...", command=self.browse_file_video, width=5)
         browse_button_video.grid(row=1, column=2, padx=10, pady=10)
 
         # Button "Browse video File" và Entry "File Path"
-        lbl_browser_frame = tk.Label(self, text="Frame Decrypt:", bg="white", font=("Arial", 12))
+        lbl_browser_frame = tk.Label(self, text="Frame Decrypt:", bg="white", font=("Arial", 10))
         lbl_browser_frame.grid(row=2, column=0, padx=10, pady=10, sticky="e")
-        self.file_path_frame = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.file_path_frame = ttk.Entry(self, width=50, font=("Arial", 10))
         self.file_path_frame.grid(row=2, column=1, pady=10, sticky="we")
         browse_button_frame = ttk.Button(self, text="...", command=self.browse_file_frame, width=5)
         browse_button_frame.grid(row=2, column=2, padx=10, pady=10)
 
         # Label và Entry cho frame cần giải mã
-        lbl_frame = tk.Label(self, text="Number frame:", bg="white", font=("Arial", 12))
+        lbl_frame = tk.Label(self, text="Number frame:", bg="white", font=("Arial", 10))
         lbl_frame.grid(row=3, column=0, padx=10, pady=10, sticky="e")
-        self.edit_entry_frame = ttk.Entry(self, width=30, font=("Arial", 12))
+        self.edit_entry_frame = ttk.Entry(self, width=30, font=("Arial", 10))
         self.edit_entry_frame.grid(row=3, column=1, pady=10, sticky="we")
         self.edit_entry_frame.grid_columnconfigure(1, weight=1)  # Đảm bảo ô nhập văn bản mở rộng theo chiều ngang
 
 
         # Password Entry
-        lbl_pass = tk.Label(self, text="Password:", bg="white", font=("Arial", 12))
+        lbl_pass = tk.Label(self, text="Password:", bg="white", font=("Arial", 10))
         lbl_pass.grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        self.edit_entry_pass = ttk.Entry(self, width=30, font=("Arial", 12), show="*")
+        self.edit_entry_pass = ttk.Entry(self, width=30, font=("Arial", 10), show="*")
         self.edit_entry_pass.grid(row=4, column=1, pady=10, sticky="we")
 
         # Load eye icon images (open and closed)
@@ -78,17 +78,17 @@ class VideoInterface(tk.Frame):
         self.toggle_eye_button.grid(row=4, column=2, padx=10)
 
         # Folder Path Save Entry
-        lbl_browser_folder = tk.Label(self, text="Folder Path Save:", bg="white", font=("Arial", 12))
+        lbl_browser_folder = tk.Label(self, text="Folder Path Save:", bg="white", font=("Arial", 10))
         lbl_browser_folder.grid(row=5, column=0, padx=10, pady=10, sticky="e")
-        self.folder_path_entry_save = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.folder_path_entry_save = ttk.Entry(self, width=50, font=("Arial", 10))
         self.folder_path_entry_save.grid(row=5, column=1, pady=10, sticky="we")
         browse_button_save = ttk.Button(self, text="...", command=self.browse_folder, width=5)
         browse_button_save.grid(row=5, column=2, padx=10, pady=10)
 
         # New File Name Entry
-        lbl_txt = tk.Label(self, text="Name New File:", bg="white", font=("Arial", 12))
+        lbl_txt = tk.Label(self, text="Name New File:", bg="white", font=("Arial", 10))
         lbl_txt.grid(row=6, column=0, padx=10, pady=10, sticky="e")
-        self.new_txt = ttk.Entry(self, width=30, font=("Arial", 12))
+        self.new_txt = ttk.Entry(self, width=30, font=("Arial", 10))
         self.new_txt.grid(row=6, column=1, pady=10, sticky="we")
 
         # Submit Button with hover effect

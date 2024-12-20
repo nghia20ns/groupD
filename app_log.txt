@@ -1,8 +1,9 @@
-[2024-12-14 13:50:23] File created successfully.
-[2024-12-14 13:54:10] Encoded the data successfully in the Image and the image is successfully saved at:D:/Learn/DoAnTotNghiep/Sample_cover_files/Encode/rc4.png
-[2024-12-14 13:54:27] File created successfully.
-[2024-12-14 13:54:54] 
-[2024-12-14 13:54:54] File created successfully.
-[2024-12-14 13:55:01] 
-[2024-12-14 13:55:01] File name already exists. Please choose another name.
-[2024-12-14 13:56:02] File created successfully.
+[2024-12-15 19:29:57] Please select a folder to save the file.
+[2024-12-15 19:30:00] File not found. Please check the file path.
+[2024-12-15 19:30:02] Please select a folder to save the file.
+[2024-12-15 19:34:33] Error: Input file not found or inaccessible.
+[2024-12-15 19:34:35] Error: Input file not found or inaccessible.
+[2024-12-15 19:34:38] Please select a folder to save the file.
+[2024-12-15 19:36:58] Error: Input file not found or inaccessible.
+[2024-12-15 19:37:06] Please select a file to decrypt.
+[2024-12-18 12:49:19] Please select a folder to save the file.

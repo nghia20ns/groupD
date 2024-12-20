@@ -88,12 +88,12 @@ class NavbarMini(tk.Frame):
         def on_enter(event):
             # Lấy màu hiện tại của hình oval
             current_fill = canvas.itemcget(oval_id, 'fill')
-            if current_fill not in ("#66b3ff", "#cceeff"):
-                canvas.itemconfig(oval_id, fill="#99ddff")  # Thay đổi màu của hình oval khi di chuột vào
+            if current_fill not in ("#66b3ff", "#99ddff"):
+                canvas.itemconfig(oval_id, fill="#cceeff")  # 99ddff Thay đổi màu của hình oval khi di chuột vào
         def on_leave(event):
             # Lấy màu hiện tại của hình oval
             current_fill = canvas.itemcget(oval_id, 'fill')
-            if current_fill not in ("#66b3ff", "#cceeff"):
+            if current_fill not in ("#66b3ff", "#99ddff"):
                 canvas.itemconfig(oval_id, fill="#e6f7ff")  # Đặt lại màu của hình oval khi di chuột rời khỏi
 
         # Ràng buộc sự kiện di chuột vào và rời khỏi cho vùng bao quanh lớn hơn
@@ -105,6 +105,6 @@ class NavbarMini(tk.Frame):
     def highlight_selected_button(self, selected_interface):
         for canvas, iface, oval_id in self.buttons:
             if iface == selected_interface:
-                canvas.itemconfig(oval_id, fill="#cceeff",state=tk.DISABLED)  # Thay đổi màu của hình oval khi chọn
+                canvas.itemconfig(oval_id, fill="#99ddff",state=tk.DISABLED)  # Thay đổi màu của hình oval khi chọn
             else:
                 canvas.itemconfig(oval_id, fill="#f0f8ff",state=tk.NORMAL)  # Đặt lại màu ban đầu của hình oval

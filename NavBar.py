@@ -34,18 +34,22 @@ class Navbar(tk.Frame):
 
     def create_button(self, text, interface, row_idx):
         button = tk.Button(self, text=text, command=lambda: self.switch_interface(interface),
-                           bg="#d9e6f2", font=("Helvetica", 10), relief="flat", cursor="hand2", state=tk.NORMAL, height=2, width=20)
+                        bg="#f0f8ff", font=("Helvetica", 10), relief="solid", borderwidth=1, 
+                        highlightthickness=0, cursor="hand2", state=tk.NORMAL, height=2, width=20)
+        
+        # Adding rounded corners (only for tkinter 8.6 and above)
+        button.config(highlightbackground="#f0f8ff", highlightcolor="#f0f8ff", bd=0)
         button.grid(row=row_idx, column=0, sticky="ew", padx=10, pady=5)
         self.add_hover_effect(button)
         self.buttons.append((button, interface))
 
     def add_hover_effect(self, widget):
         def on_enter(event):
-            if widget['bg'] not in ("#66b3ff", "#f0f0f5"):  # Avoid hover effect on selected button
+            if widget['bg'] not in ("#99ddff", "#f0f0f5"):  # Avoid hover effect on selected button
                 widget['bg'] = "#a9c9f5"  # Subtle light blue hover effect
         def on_leave(event):
-            if widget['bg'] not in ("#66b3ff", "#f0f0f5"):
-                widget['bg'] = "#d9e6f2"  # Restore button color
+            if widget['bg'] not in ("#99ddff", "#f0f0f5"):
+                widget['bg'] = "#f0f8ff"  # Restore button color
         widget.bind("<Enter>", on_enter)
         widget.bind("<Leave>", on_leave)
 
@@ -58,6 +62,6 @@ class Navbar(tk.Frame):
     def highlight_selected_button(self, selected_interface):
         for button, iface in self.buttons:
             if iface == selected_interface:
-                button.config(bg="#66b3ff", state=tk.DISABLED, font=("Helvetica", 10))  # Active button with accent color
+                button.config(bg="#99ddff", state=tk.DISABLED, font=("Helvetica", 10))  # Active button with accent color
             else:
-                button.config(bg="#d9e6f2", state=tk.NORMAL, font=("Helvetica", 10))  # Reset other buttons
+                button.config(bg="#f0f8ff", state=tk.NORMAL, font=("Helvetica", 10))  # Reset other buttons

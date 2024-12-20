@@ -1,117 +1,155 @@
-import os
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
-from binary import *
+from tkinter import scrolledtext
+from datetime import datetime
 
-class TextEncoderApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Text Encoder")
-        self.root.geometry("600x400")
+# Lớp Logger toàn cục
+class GlobalLogger:
+    _instance = None
 
-        self.algorithm = tk.IntVar(value=0)
-        self.input_file = None
-        self.output_file = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+            cls._instance.logs = []  # Danh sách log toàn cục
+        return cls._instance
 
-        # Layout
-        self.create_widgets()
+    def add_log(self, message):
+        """Thêm log vào danh sách toàn cục"""
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_message = f"[{current_time}] {message}\n"
+        self.logs.append(log_message)
 
-    def create_widgets(self):
-        # Input File Section
-        ttk.Label(self.root, text="Input File:").grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        self.input_file_entry = ttk.Entry(self.root, width=50)
-        self.input_file_entry.grid(row=0, column=1, padx=10, pady=10, sticky="w")
-        ttk.Button(self.root, text="Browse", command=self.browse_input_file).grid(row=0, column=2, padx=10, pady=10)
+    def get_logs(self, limit=None):
+        """Lấy danh sách log, giới hạn số lượng nếu cần"""
+        if limit:
+            return self.logs[-limit:]  # Lấy số log mới nhất
+        return self.logs  # Trả về toàn bộ log
 
-        # Output File Section
-        ttk.Label(self.root, text="Output File:").grid(row=1, column=0, padx=10, pady=10, sticky="w")
-        self.output_file_entry = ttk.Entry(self.root, width=50)
-        self.output_file_entry.grid(row=1, column=1, padx=10, pady=10, sticky="w")
-        ttk.Button(self.root, text="Browse", command=self.browse_output_file).grid(row=1, column=2, padx=10, pady=10)
 
-        # Password Section
-        ttk.Label(self.root, text="Password:").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-        self.password_entry = ttk.Entry(self.root, show="*", width=50)
-        self.password_entry.grid(row=2, column=1, padx=10, pady=10, sticky="w")
-        self.show_password = tk.BooleanVar(value=False)
-        self.toggle_password_btn = ttk.Checkbutton(
-            self.root, text="Show", variable=self.show_password, command=self.toggle_password_visibility
-        )
-        self.toggle_password_btn.grid(row=2, column=2, padx=10, pady=10)
+# Lớp hiển thị log (Log Viewer)
+class LogDisplay(tk.Frame):
+    def __init__(self, master, logger, limit=None):
+        super().__init__(master)
+        self.logger = logger  # Tham chiếu đến Logger toàn cục
+        self.limit = limit  # Số dòng log tối đa để hiển thị (None = tất cả)
 
-        # Algorithm Selection
-        ttk.Label(self.root, text="Algorithm:").grid(row=3, column=0, padx=10, pady=10, sticky="w")
-        algorithms = ["XOR", "Vigenere", "RC4"]
-        for i, algo in enumerate(algorithms):
-            ttk.Radiobutton(self.root, text=algo, variable=self.algorithm, value=i).grid(row=3, column=i + 1, padx=10, pady=10, sticky="w")
+        # Tạo ScrolledText để hiển thị log
+        self.log_display = scrolledtext.ScrolledText(self, width=60, height=10, wrap=tk.WORD, state=tk.DISABLED)
+        self.log_display.pack(fill="both", expand=True, padx=5, pady=5)
 
-        # Log Display
-        ttk.Label(self.root, text="Log:").grid(row=4, column=0, padx=10, pady=10, sticky="nw")
-        self.log_display = tk.Text(self.root, height=10, width=70, state="disabled")
-        self.log_display.grid(row=4, column=1, columnspan=2, padx=10, pady=10, sticky="w")
+        # Tải log ban đầu
+        self.load_logs()
 
-        # Action Buttons
-        ttk.Button(self.root, text="Submit", command=self.submit).grid(row=5, column=1, pady=20)
+    def load_logs(self):
+        """Hiển thị log từ danh sách toàn cục"""
+        logs = self.logger.get_logs(limit=self.limit)
+        self.log_display.config(state=tk.NORMAL)
+        self.log_display.delete("1.0", tk.END)
+        self.log_display.insert("1.0", ''.join(reversed(logs)))  # Đảo log để log mới nhất ở trên cùng
+        self.log_display.config(state=tk.DISABLED)
 
-    def browse_input_file(self):
-        self.input_file = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
-        self.input_file_entry.delete(0, tk.END)
-        self.input_file_entry.insert(0, self.input_file)
+    def update_logs(self):
+        """Cập nhật log mới khi có thay đổi"""
+        self.load_logs()
 
-    def browse_output_file(self):
-        self.output_file = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
-        self.output_file_entry.delete(0, tk.END)
-        self.output_file_entry.insert(0, self.output_file)
 
-    def toggle_password_visibility(self):
-        if self.show_password.get():
-            self.password_entry.config(show="")
-        else:
-            self.password_entry.config(show="*")
+# Tạo giao diện ứng dụng với nhiều trang
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.logger = GlobalLogger()  # Sử dụng Logger toàn cục
+        self.title("Global Log Viewer")
+        self.geometry("800x600")
 
-    def log(self, message):
-        self.log_display.config(state="normal")
-        self.log_display.insert(tk.END, message + "\n")
-        self.log_display.config(state="disabled")
+        # Tạo container để quản lý các trang
+        self.container = tk.Frame(self)
+        self.container.pack(fill="both", expand=True)
 
-    def encode_txt_data(self, text, password, algorithm):
-        if algorithm == 0:
-            return xor_cipher(text, password)
-        elif algorithm == 1:
-            return vigenere_encrypt(text, password)
-        elif algorithm == 2:
-            return rc4_encrypt(text, password)
+        # Dictionary lưu các trang
+        self.frames = {}
 
-    def submit(self):
-        input_file = self.input_file_entry.get()
-        output_file = self.output_file_entry.get()
-        password = self.password_entry.get()
+        # Tạo các trang
+        for F in (Page1, Page2, GlobalLogPage):
+            page_name = F.__name__
+            frame = F(parent=self.container, controller=self)
+            self.frames[page_name] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
 
-        if not input_file or not output_file or not password:
-            messagebox.showerror("Error", "Please fill in all fields!")
-            return
+        # Hiển thị trang đầu tiên
+        self.show_frame("Page1")
 
-        if not os.path.exists(input_file):
-            messagebox.showerror("Error", "Input file does not exist!")
-            return
+    def show_frame(self, page_name):
+        """Hiển thị trang được chỉ định"""
+        frame = self.frames[page_name]
+        frame.tkraise()
 
-        with open(input_file, "r", encoding="utf-8") as f:
-            text = f.read()
 
-        algorithm = self.algorithm.get()
-        encoded_text = self.encode_txt_data(text, password, algorithm)
+# Trang 1
+class Page1(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
 
-        if len(encoded_text) > 10000:
-            self.log("Encoded text is too long. Please reduce input size.")
-            return
+        label = tk.Label(self, text="Page 1", font=("Arial", 16))
+        label.pack(pady=10)
 
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(encoded_text)
+        log_button = tk.Button(self, text="Add Log (Page 1)", command=self.add_log)
+        log_button.pack(pady=5)
 
-        self.log(f"File encoded successfully and saved to {output_file}.")
-        messagebox.showinfo("Success", "Encoding completed successfully!")
+        next_page = tk.Button(self, text="Go to Page 2", command=lambda: controller.show_frame("Page2"))
+        next_page.pack(pady=5)
 
+        global_log_page = tk.Button(self, text="View Global Log", command=lambda: controller.show_frame("GlobalLogPage"))
+        global_log_page.pack(pady=5)
+
+    def add_log(self):
+        """Thêm log từ trang 1"""
+        self.controller.logger.add_log("Log added from Page 1")
+
+
+# Trang 2
+class Page2(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+
+        label = tk.Label(self, text="Page 2", font=("Arial", 16))
+        label.pack(pady=10)
+
+        log_button = tk.Button(self, text="Add Log (Page 2)", command=self.add_log)
+        log_button.pack(pady=5)
+
+        back_page = tk.Button(self, text="Go to Page 1", command=lambda: controller.show_frame("Page1"))
+        back_page.pack(pady=5)
+
+        global_log_page = tk.Button(self, text="View Global Log", command=lambda: controller.show_frame("GlobalLogPage"))
+        global_log_page.pack(pady=5)
+
+    def add_log(self):
+        """Thêm log từ trang 2"""
+        self.controller.logger.add_log("Log added from Page 2")
+
+
+# Trang hiển thị log toàn cục
+class GlobalLogPage(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+
+        label = tk.Label(self, text="Global Log Viewer", font=("Arial", 16))
+        label.pack(pady=10)
+
+        # Hiển thị log toàn cục
+        self.log_viewer = LogDisplay(self, logger=controller.logger)
+        self.log_viewer.pack(fill="both", expand=True)
+
+        refresh_button = tk.Button(self, text="Refresh Logs", command=self.log_viewer.update_logs)
+        refresh_button.pack(pady=5)
+
+        back_button = tk.Button(self, text="Back to Page 1", command=lambda: controller.show_frame("Page1"))
+        back_button.pack(pady=5)
+
+
+# Chạy ứng dụng
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = TextEncoderApp(root)
-    root.mainloop()
+    app = App()
+    app.mainloop()

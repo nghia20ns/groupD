@@ -7,6 +7,8 @@ import wave
 from tkinter import ttk
 import tkinter
 from PIL import Image, ImageTk
+from Logger import LogDisplay, Logger
+
 class DecodeComponent(tk.Frame):
     def __init__(self, master):
         super().__init__(master, bg="white")
@@ -32,17 +34,17 @@ class DecodeComponent(tk.Frame):
         label = tk.Label(self, text="Audio Decryption", font=("Arial", 18, "bold"), bg="white")
         label.grid(row=0, column=0, columnspan=3, padx=20, pady=20)
         # Button "Browse File" và Entry "File Path"
-        lbl_browser_file = tk.Label(self, text="File Decrypt:", bg="white", font=("Arial", 12))
+        lbl_browser_file = tk.Label(self, text="File Decrypt:", bg="white", font=("Arial", 10))
         lbl_browser_file.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-        self.file_path_entry = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.file_path_entry = ttk.Entry(self, width=50, font=("Arial", 10))
         self.file_path_entry.grid(row=1, column=1, pady=10, sticky="we")
         browse_button = ttk.Button(self, text="...", command=self.browse_file, width=5)
         browse_button.grid(row=1, column=2, padx=10, pady=10)
 
         # Password Entry
-        lbl_pass = tk.Label(self, text="Password:", bg="white", font=("Arial", 12))
+        lbl_pass = tk.Label(self, text="Password:", bg="white", font=("Arial", 10))
         lbl_pass.grid(row=2, column=0, padx=10, pady=10, sticky="e")
-        self.edit_entry_pass = ttk.Entry(self, width=30, font=("Arial", 12), show="*")
+        self.edit_entry_pass = ttk.Entry(self, width=30, font=("Arial", 10), show="*")
         self.edit_entry_pass.grid(row=2, column=1, pady=10, sticky="we")
 
         # Load eye icon images (open and closed)
@@ -58,7 +60,7 @@ class DecodeComponent(tk.Frame):
 
 
         #Radio Button encryption algorithm
-        lbl_text = tk.Label(self, text="Decryption algorithm:", bg="white", font=("Arial", 12))
+        lbl_text = tk.Label(self, text="Decryption algorithm:", bg="white", font=("Arial", 10))
         lbl_text.grid(row=3, column=0, padx=10, pady=10, sticky="e")
         # Frame cho các nút RadioButton
         self.buttons_frame = tkinter.Frame(self, bg="white")
@@ -74,23 +76,23 @@ class DecodeComponent(tk.Frame):
                 variable=self.algorithm,
                 value=index,
                 padx=5,
-                font=("Arial", 10),  # Chỉnh sửa font chữ và kích thước
+                font=("Arial", 9),  # Chỉnh sửa font chữ và kích thước
                 bg="white"        # Chỉnh sửa màu nền
             )
             radio_button.grid(row=0, column=index, padx=5)  # Chia đều các cột cho các nút radio
 
         # Folder Path Save Entry
-        lbl_browser_folder = tk.Label(self, text="Folder Path Save:", bg="white", font=("Arial", 12))
+        lbl_browser_folder = tk.Label(self, text="Folder Path Save:", bg="white", font=("Arial", 10))
         lbl_browser_folder.grid(row=5, column=0, padx=10, pady=10, sticky="e")
-        self.folder_path_entry_save = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.folder_path_entry_save = ttk.Entry(self, width=50, font=("Arial", 10))
         self.folder_path_entry_save.grid(row=5, column=1, pady=10, sticky="we")
         browse_button_save = ttk.Button(self, text="...", command=self.browse_folder, width=5)
         browse_button_save.grid(row=5, column=2, padx=10, pady=10)
 
         # New File Name Entry
-        lbl_txt = tk.Label(self, text="Name New File:", bg="white", font=("Arial", 12))
+        lbl_txt = tk.Label(self, text="Name New File:", bg="white", font=("Arial", 10))
         lbl_txt.grid(row=6, column=0, padx=10, pady=10, sticky="e")
-        self.new_txt = ttk.Entry(self, width=30, font=("Arial", 12))
+        self.new_txt = ttk.Entry(self, width=30, font=("Arial", 10))
         self.new_txt.grid(row=6, column=1, pady=10, sticky="we")
 
         # Submit Button with hover effect
@@ -100,7 +102,11 @@ class DecodeComponent(tk.Frame):
         # Log Output Area
         self.log_label = tk.Label(self, text="", bg="white", font=("Arial", 10, "italic"))
         self.log_label.grid(row=8, column=1, padx=10, pady=5, sticky="e")
-        
+                #Log
+        self.logger = Logger("app_log.txt")
+        self.log_display = LogDisplay(self, self.logger)
+        self.log_display.grid(row=8, column=0, columnspan=3, sticky="nsew")
+
     def toggle_password(self):
         # Toggle the password visibility
         if self.edit_entry_pass.cget("show") == "*":
@@ -111,20 +117,36 @@ class DecodeComponent(tk.Frame):
             self.toggle_eye_button.config(image=self.eye_closed_icon)  # Switch to closed eye icon
 
     def browse_folder(self):
-        folder_path = filedialog.askdirectory()
-        self.folder_path_entry_save.delete(0, tk.END)  # Xóa nội dung trong entry trước khi cập nhật
-        self.folder_path_entry_save.insert(0, folder_path)  # Thêm đường dẫn thư mục đã chọn vào entry
-
-    def log(self, message):
-        self.log_label.config(text=message)
+        try:
+            folder_path = filedialog.askdirectory()
+            if folder_path:
+                self.folder_path_entry_save.delete(0, tk.END)
+                self.folder_path_entry_save.insert(0, folder_path)
+            else:
+                self.log_display.add_log("No folder selected.")
+        except Exception as e:
+            self.log_display.add_log(f"Error selecting folder: {e}")
 
     def browse_file(self):
         filename = filedialog.askopenfilename(defaultextension=".wav", filetypes=[("WAV files", "*.wav"), ("All files", "*.*")])
         
         self.file_path_entry.delete(0, tk.END)
         self.file_path_entry.insert(0, filename)
+
     def submit(self):
-        self.decode_audio_data()
+        if not self.file_path_entry.get():
+            self.log_display.add_log("Please select a file to decrypt.")
+            return
+        if not self.folder_path_entry_save.get():
+            self.log_display.add_log("Please select a folder to save the file.")
+            return
+        if not self.new_txt.get().strip():
+            self.log_display.add_log("Please enter a valid name for the new file.")
+            return
+        try:
+            self.decode_audio_data()
+        except Exception as e:
+            self.log_display.add_log(f"Error during decoding: {e}")
 
     def reserve_audio_data(self, frame_bytes):
         extracted = ""
@@ -170,10 +192,10 @@ class DecodeComponent(tk.Frame):
             nameoffile += ".txt"
         if os.path.exists(nameoffile):
             # Tên tệp đã tồn tại, thông báo cho người dùng
-            self.log("File name already exists. Please choose another name.")
+            self.log_display.add_log("File name already exists. Please choose another name.")
             return 0
         with open(nameoffile, "w", encoding="utf-8") as output_file:
             output_file.write(hidden_message)
-            self.log("create file successful.")
+            self.log_display.add_log("create file successful.")
 
         return

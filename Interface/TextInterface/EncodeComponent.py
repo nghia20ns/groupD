@@ -30,15 +30,15 @@ class EncodeComponent(tk.Frame):
         label.grid(row=0, column=0, columnspan=3, padx=20, pady=20)
 
         # Text Entry
-        lbl_text = tk.Label(self, text="Text to encrypt:", bg="white", font=("Arial", 12))
+        lbl_text = tk.Label(self, text="Text to encrypt:", bg="white", font=("Arial", 10))
         lbl_text.grid(row=1, column=0, padx=10, pady=10, sticky="e")
-        self.edit_entry_text = ttk.Entry(self, width=30, font=("Arial", 12))
+        self.edit_entry_text = ttk.Entry(self, width=30, font=("Arial", 10))
         self.edit_entry_text.grid(row=1, column=1, pady=10, sticky="we")
 
         # Password Entry
-        lbl_pass = tk.Label(self, text="Password:", bg="white", font=("Arial", 12))
+        lbl_pass = tk.Label(self, text="Password:", bg="white", font=("Arial", 10))
         lbl_pass.grid(row=2, column=0, padx=10, pady=10, sticky="e")
-        self.edit_entry_pass = ttk.Entry(self, width=30, font=("Arial", 12), show="*")
+        self.edit_entry_pass = ttk.Entry(self, width=30, font=("Arial", 10), show="*")
         self.edit_entry_pass.grid(row=2, column=1, pady=10, sticky="we")
 
         # Load eye icon images (open and closed)
@@ -55,7 +55,7 @@ class EncodeComponent(tk.Frame):
         self.toggle_eye_button.grid(row=2, column=2, padx=10)
 
         # Radio Button encryption algorithm
-        lbl_text = tk.Label(self, text="Encryption algorithm:", bg="white", font=("Arial", 12))
+        lbl_text = tk.Label(self, text="Encryption algorithm:", bg="white", font=("Arial", 10))
         lbl_text.grid(row=3, column=0, padx=10, pady=10, sticky="e")
 
         # Frame for RadioButton options
@@ -71,31 +71,31 @@ class EncodeComponent(tk.Frame):
                 variable=self.algorithm,
                 value=index,
                 padx=5,
-                font=("Arial", 10),  # Adjust font size
+                font=("Arial", 9),  # Adjust font size
                 bg="white"        # Adjust background color
             )
             radio_button.grid(row=0, column=index, padx=5)
 
         # File Path Entry
-        lbl_browser_file = tk.Label(self, text="File Encode:", bg="white", font=("Arial", 12))
+        lbl_browser_file = tk.Label(self, text="File Encode:", bg="white", font=("Arial", 10))
         lbl_browser_file.grid(row=4, column=0, padx=10, pady=10, sticky="e")
-        self.file_path_entry = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.file_path_entry = ttk.Entry(self, width=50, font=("Arial", 10))
         self.file_path_entry.grid(row=4, column=1, pady=10, sticky="we")
         browse_button = ttk.Button(self, text="...", command=self.browse_file, width=5)
         browse_button.grid(row=4, column=2, padx=10, pady=10)
 
         # Folder Path Save Entry
-        lbl_browser_folder = tk.Label(self, text="Folder Path Save:", bg="white", font=("Arial", 12))
+        lbl_browser_folder = tk.Label(self, text="Folder Path Save:", bg="white", font=("Arial", 10))
         lbl_browser_folder.grid(row=5, column=0, padx=10, pady=10, sticky="e")
-        self.folder_path_entry_save = ttk.Entry(self, width=50, font=("Arial", 12))
+        self.folder_path_entry_save = ttk.Entry(self, width=50, font=("Arial", 10))
         self.folder_path_entry_save.grid(row=5, column=1, pady=10, sticky="we")
         browse_button_save = ttk.Button(self, text="...", command=self.browse_folder, width=5)
         browse_button_save.grid(row=5, column=2, padx=10, pady=10)
 
         # New File Name Entry
-        lbl_txt = tk.Label(self, text="Name New File:", bg="white", font=("Arial", 12))
+        lbl_txt = tk.Label(self, text="Name New File:", bg="white", font=("Arial", 10))
         lbl_txt.grid(row=6, column=0, padx=10, pady=10, sticky="e")
-        self.new_txt = ttk.Entry(self, width=30, font=("Arial", 12))
+        self.new_txt = ttk.Entry(self, width=30, font=("Arial", 10))
         self.new_txt.grid(row=6, column=1, pady=10, sticky="we")
 
         # Submit Button

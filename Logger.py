@@ -19,16 +19,20 @@ class LogDisplay(tk.Frame):
         try:
             with open(self.logger.log_file, "r", encoding="utf-8") as file:
                 log_content = file.readlines()  # Đọc tất cả dòng trong tệp
-                last_3_logs = log_content[-3:]  # Lấy 3 dòng cuối cùng
+                last_3_logs = log_content[-5:]  # Lấy 3 dòng cuối cùng
+
+                # Đảo ngược thứ tự các dòng log để log mới nhất hiển thị ở trên cùng
+                last_3_logs.reverse()  # Đảo ngược danh sách dòng log
 
                 # Chèn 3 dòng cuối vào phần hiển thị
                 self.log_display.config(state=tk.NORMAL)
                 self.log_display.delete("1.0", tk.END)  # Xóa toàn bộ nội dung
-                self.log_display.insert("1.0", ''.join(last_3_logs))  # Chèn 3 dòng cuối vào đầu
+                self.log_display.insert(tk.END, ''.join(last_3_logs))  # Chèn 3 dòng mới nhất vào cuối
                 self.log_display.config(state=tk.DISABLED)
         except FileNotFoundError:
             # Nếu tệp log không tồn tại, chỉ hiển thị thông báo rỗng
             pass
+
         
     def add_log(self, message):
         """Thêm log mới với timestamp"""
